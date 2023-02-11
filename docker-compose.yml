@@ -1,0 +1,43 @@
+version: '3'
+services:
+  car-rental:
+    container_name: car-rental
+    build:
+      context: ./car_rental
+      dockerfile: Dockerfile
+    environment:
+      - SECRET_KEY=cr0c050ft-k3y
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    links:
+      - db
+    networks:
+      - crocosoft-network
+
+  db:
+    container_name: car-rental-mysql
+    image: mysql:5.7.29
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crocosoft
+      MYSQL_ROOT_HOST: '%'
+    networks:
+      - crocosoft-network
+
+networks:
+  crocosoft-network:
+    driver: bridge
+
+volumes:
+  db:
+    driver: local
